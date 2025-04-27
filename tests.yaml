@@ -1,0 +1,56 @@
+# В этом файле забита схема тестирования сервиса, см. service.py для подробностей
+
+# Реквизиты для получения токена api, (нужно только при USING_AUTH == true).
+# Если не определено (или закомментировано) - будет запрошен ввод с клавиатуры.
+#auth:
+#    user: 'username'
+#    passw: 'password'
+
+# интеграционные тесты
+# схема:
+#     name - название или описание теста
+#     request - json объект, отправляемый сервису.
+#       token тут не нужен, см. выше
+#       jsonrpc: 2.0 и id можно не писать - id будет сгенерирован случайно, jsonrpc - просто подставится
+#     expected - ожидаемый ответ
+#     critical - bool, если true и тест не выполнился - текст будет красным,
+#       если false и тест не выполнился - текст будет жёлтым
+integration:
+    -
+        name: 'pingpong marco polo'
+        request: '{"method":"pingpong","params":{"marco": "polo"},"id":"testing"}'
+        expected: '{"id": "testing", "jsonrpc": "2.0", "result": {"polo": "marco"}}'
+        critical: true
+    -
+        name: 'pingpong ping pong (корявый специально)'
+        request: '{"ping": "pong"}'
+        expected: '{"pong": "ping"}'
+        critical: false
+
+# юнит-тесты
+# схема:
+#     name - название функции, которую нужно протестировать
+#     from - см. ниже
+#     import - части конструкции from x import y, вместо x и y будут подставлены строки
+#     expected - bool, ожидаемый результат выполнения функции в файле
+#     critical - bool, если true и тест не выполнился - текст будет красным,
+#       если false и тест не выполнился - текст будет жёлтым
+unit:
+    -
+        name: 'testing_unit_tests'
+        from: 'tests'
+        import: 'unit1'
+        expected: true
+        critical: true
+    -
+        name: 'testing_unit_tests'
+        from: 'tests'
+        import: 'unit1'
+        expected: false
+        critical: true
+    -
+        name: 'testing_unit_tests'
+        from: 'tests'
+        import: 'unit1'
+        expected: false
+        critical: false

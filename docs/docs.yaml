@@ -1,0 +1,30 @@
+openapi: "3.0.0"
+info:
+  title: "Example Api"
+  description: "Сервис, где я пробую штуки которые хочется<br/><br/>Чтобы делать интерактивные запросы из браузера 
+  - нужно выставить сервер соответствующий адресу в браузере в выпадающем списке ниже"
+  version: "1.0"
+  contact:
+    name: "Alex Tamilin"
+    url: "https://t.me/aptac01"
+    email: "aptac01@mail.ru"
+servers:
+  - url: "http://0.0.0.0:1234/"
+    description: "Инстанс при деплое нативно"
+  - url: "http://localhost:1234/"
+    description: "Иногда вот так вбиваю адрес"
+  - url: "http://192.168.56.104:8969/"
+    description: "Инстанс в докере"
+  - url: "http://192.168.56.104:1234/"
+    description: "Инстанс на виртуалке"
+paths:
+  /login:
+    $ref: "docs_pieces/login.yaml"
+  /pingpong:
+    $ref: "docs_pieces/pingpong.yaml"
+  /uwsgi_stats:
+    $ref: "docs_pieces/uwsgi_stats.yaml"
+  /metrics:
+    $ref: "docs_pieces/metrics.yaml"
+  /ping/:
+    $ref: "docs_pieces/ping.yaml"

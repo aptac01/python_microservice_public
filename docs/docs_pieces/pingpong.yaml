@@ -1,0 +1,70 @@
+post:
+  summary: " метод pingpong, чисто для теста"
+  tags:
+  - main methods
+  description: "Делает очень полезное нихуя. На ping:pong - отвечает pong:ping, для marco:polo даёт polo:marco."
+  requestBody:
+    description: "Подробное описание <br/> МЕСТО ВАШЕЙ РЕКЛАМЫ"
+    content:
+      'application/json':
+        schema:
+          title: "Список параметров для запроса"
+          type: object
+          properties:
+            jsonrpc:
+              type: string
+              description: "используемая версия спецификации jsonrpc, в нашем случае - 2.0"
+            id:
+              type: string
+              description: "ид, который возвращается в ответе, часть спецификации"
+            method:
+              type: string
+              description: "название метода"
+            params:
+              type: object
+              description: "смотри примеры"
+        examples:
+          example1:
+            summary: pongping
+            description: "тут ответ будет pong:ping"
+            value: '{"jsonrpc": "2.0","id": "any id you like","method": "pingpong","params": {"ping":"pong"}}'
+            externalValue: "http://тут.может/быть-сцылка-на-файл-с-примером"
+          example2:
+            summary: polomarco
+            description: "а тут polo:marco"
+            value: '{"jsonrpc": "2.0","id": "any id you like","method": "pingpong","params": {"marco":"polo"}}'
+            externalValue: "http://тут.может/быть-сцылка-на-файл-с-примером"
+          example3:
+            summary: get_error
+            description: "а тут будет ошибка с внутренним кодом сервиса"
+            value: '{"jsonrpc": "2.0","id": "any id you like","method": "pingpong","params": {"marco":"polo", "get_error":"11"}}'
+            externalValue: "http://тут.может/быть-сцылка-на-файл-с-примером"
+  responses:
+    200:
+      description: "описание успешного запроса"
+      content:
+        application/json:
+          schema:
+            title: "object name"
+            type: object
+            properties:
+              jsonrpc:
+                type: string
+                description: "must be equal to version used, 2.0 in our case"
+              id:
+                type: string
+                description: "returns a request id that client used in his request"
+              result:
+                type: object
+                description: "resulting dictionary, \"polo\":\"marco\" (if \"marco\":\"polo\" was requested) and \"pong\":\"ping\" (if \"ping\":\"pong\" was requested)"
+                anyOf:
+                  - type: object
+                    properties:
+                      polo:
+                        type: string
+                        description: "has value marco"
+                  - type: object
+                    properties:
+                      pong:
+                        type: string
+                        description: "has value ping"

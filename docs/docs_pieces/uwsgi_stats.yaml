@@ -1,0 +1,49 @@
+post:
+  summary: " метод service.uwsgi_stats"
+  tags:
+    - main methods
+  description: ""
+  requestBody:
+    description: "Подробное описание <br/> МЕСТО ВАШЕЙ РЕКЛАМЫ"
+    content:
+      'application/json':
+        schema:
+          title: "Список параметров для запроса"
+          type: object
+          properties:
+            jsonrpc:
+              type: string
+              description: "используемая версия спецификации jsonrpc, в нашем случае - 2.0"
+            id:
+              type: string
+              description: "ид, который возвращается в ответе, часть спецификации"
+            method:
+              type: string
+              description: "название метода"
+            params:
+              type: object
+              description: "смотри примеры"
+        examples:
+          example1:
+            summary: сумари
+            description: "тест тест"
+            value: '{"jsonrpc": "2.0","id": "any id you like","method": "service.uwsgi_stats"}'
+            externalValue: "http://тут.может/быть-сцылка-на-файл-с-примером"
+  responses:
+    200:
+      description: "описание успешного запроса"
+      content:
+        application/json:
+          schema:
+            title: "object name"
+            type: object
+            properties:
+              jsonrpc:
+                type: string
+                description: "must be equal to version used, 2.0 in our case"
+              id:
+                type: string
+                description: "returns a request id that client used in his request"
+              result:
+                type: object
+            description: "resulting dictionary"

@@ -1,0 +1,18 @@
+get:
+  summary: "показывает консулу что сервис жив и обрабатывает запросы"
+  tags:
+  - methods allowing service to function properly
+  description: "каждые несколько секунд консул делает запрос, есть ответ - сервис жив"
+  responses:
+    200:
+      description: "какой-то ответ со статусом 200"
+      content:
+        text/html; charset=utf-8:
+          schema:
+            type: string
+            format: html
+          examples:
+            example1:
+              summary: МЕСТО ВАШЕЙ РЕКЛАМЫ
+              externalValue: "http://тут.может/быть-сцылка-на-файл-с-примером"
+              value: 'pong'

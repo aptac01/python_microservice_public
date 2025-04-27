@@ -1,0 +1,125 @@
+# FLASK ПРИНИМАЕТ ПЕРЕМЕННЫЕ ДЛЯ СВОЕГО КОНФИГА ТОЛЬКО В ВЕРХНЕМ РЕГИСТРЕ
+# эта часть в большинстве ситуаций не меняется, но SECRET_KEY на каждом деплое должен быть уникальным
+DEBUG:         false
+TESTING:       false
+CSRF_ENABLED:  true
+# https://stackoverflow.com/questions/14853694/python-jsonify-dictionary-in-utf-8",
+JSON_AS_ASCII: false
+# см. main_packet_handler в app/app.py
+ALLOW_BATCHES: false
+# python3.x binascii.hexlify(os.urandom(24))
+SECRET_KEY:    234d8a1681aa08fd6bb82600aed14e81a7fbe2a67d3a4a8a
+
+# всё, что дальше - уникально для каждого приложения
+
+# пути, которые нужно настроить при очередном развертывании
+# переменная  | название метки | значение
+api_directory:            &api /usr/src/python_microservice_public
+env_directory:            &env !join [*api, /env]
+pid_file:                 &pid !join [*api, /tmp/example_api-master.pid]
+PROMETHEUS_MULTIPROC_DIR: &pmd !join [*api, /pfe_multiprocess_tmp]
+TMP_DIR:                  &tmp !join [*api, /tmp/]
+nohup_out_log:                 !join [*api, /log/nohup.out]
+
+# имя для файла-скрипта для удобной работы в cli (ruffles), по умолчанию - service
+#neat_script_name:              service
+
+# список директорий, которые будут созданы при очередном парсинге
+directories_to_create:
+     - *pmd
+     - *tmp
+     - !join [*api, /log/]
+
+# список путей (файлов и/или папок) которые будут удалены после очередной остановки сервиса
+paths_to_delete:
+     - *pid
+     - *pmd
+
+# параметры, которые будут определены в env-переменные при парсинге конфига
+env_vars:
+     - PROMETHEUS_MULTIPROC_DIR
+
+# команда, lsof на конкретной машине
+lsof_command: lsof
+
+# настройки на разные контура
+CONSUL_ADDRESS: 10.20.30.40
+CONSUL_PORT:    7999
+local_ip:       &ip 0.0.0.0
+local_port:     &port 1234
+SERVER_ADDRESS: localhost
+SERVER_PORT:    *port
+SERVICE_NAME:   tamilin-python-test
+SERVICE_ID:     tamilin-python-test-1
+TAGS:
+     - jsonrpc
+     - rest
+     - metrics
+DEPLOY_PROD:    false
+AUTH_URI:       'http://auth.uri.com'
+AUTH_URI_PROD:  'http://auth.uri.prod.com'
+
+# настройки для relog
+# регулярное выражение, для названия логов, обрабатываемые relog и delete_logs
+RELOG_FILES:           'example_uwsgi\.log(\.\d+)*'
+# удалять логи старше, чем столько дней,
+DELETE_LOGS_DAYS:      3
+# удалять или нет вторичные логи, если не был передан параметр в cli, флаг --relog
+DELETE_RELOG_FILES:    1
+# при чистке файлов по расписанию, удалять старше чем столько дней,
+DELETE_JUNK_CRON_DAYS: 7
+
+# стучаться в консул или нет, если не был передан параметр в cli, флаг --consul
+CONSUL_REG:         0
+
+# красить, ли логи при выводе на экран или в файлы (соответственно),
+COLOR_LOGS_SCREEN:  1
+COLOR_LOGS_FILES:   0
+
+# Проверять ли авторизацию в auth (валидировать ли токен)
+USING_AUTH: true
+
+# настроки, для конфига uwsgi
+# каждый параметр будет передан в конфиг uwsgi
+uwsgi:
+     config_file:     !join [*tmp, uwsgi.yaml]
+     chdir:           *api
+#     virtualenv:      *env
+#     pythonpath:      !join [*env, /bin]
+     python-path:     !join [*api, /app]
+     module:          app
+     callable:        app
+     processes:       2
+     http:            !join [*ip, ':', *port]
+     master:          true
+     pidfile:         *pid
+     max-requests:    5000
+     disable-logging: true
+     logto:           !join [*api, /log/example_%n.log]
+     log-maxsize:     100000
+     log-date:        '[%%d.%%m.%%Y %%H:%%M:%%S]'
+     cron2:
+          # каждую пятницу в 23:35 чистим мусор
+          - !join ['minute=35,hour=23,week=5 ', *env, '/bin/python ', 'periodic_tasks/clean_junk.py']
+
+swagger_ui:
+     enabled: true
+     users:
+          aptac01: basic_password
+
+alerts:
+     machine_name: 'python_microservice_public for CV'
+     tg:
+#         токен бота и chat_id куда отправлять алёрты
+          info:
+               token: 'токен от бота'
+               chat_id: 'чат ид'
+          critical:
+               token: 'токен другого бота'
+               chat_id: 'тот же чат ид'
+     sl:
+#         больше инфы - по запросу "slack webhooks"
+          info:
+               hook: 'https://адрес.вебхука.в.слаке'
+          critical:
+               hook: 'https://адрес.другого.вебхука.в.слаке'

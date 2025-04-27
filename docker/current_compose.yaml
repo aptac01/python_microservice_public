@@ -1,0 +1,16 @@
+
+services:
+  python_microservice_public:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      ssh:
+        - default
+    post_start:
+      - command: ./service start
+    image: python_microservice
+    restart: unless-stopped
+    ports:
+      - "8969:1234"
+    volumes:   # %откуда снаружи%:%куда внутри%
+      - .:/usr/src/python_microservice

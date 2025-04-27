@@ -1,0 +1,64 @@
+post:
+  summary: "Получение токена в сервисе авторизации"
+  tags:
+    - авторизация
+  description: "Для использования всех остальных методов нужен токен, он получается здесь. Нужно иметь пользователя в системе. <br/><br/>
+  Т.к. это внешний сервис - без нужных доступов этот метод не заработает (при отправке запроса подвисает, а потом ошибка вроде \"TypeError: NetworkError when attempting to fetch resource.\")"
+  requestBody:
+    description: "Запрос передается auth с тем же requestId"
+    content:
+      'application/json':
+        schema:
+          title: "Схема параметров запроса"
+          description: "Да кто вообще сюда будет заглядывать, когда есть примеры?"
+          type: object
+          properties:
+            jsonrpc:
+              type: string
+              description: "используемая версия спецификации jsonrpc, в нашем случае - 2.0"
+            id:
+              type: string
+              description: "ид, который возвращается в ответе, часть спецификации"
+            method:
+              type: string
+              description: "название метода"
+            params:
+              type: object
+              description: "смотри примеры"
+        examples:
+          example1:
+            summary: запрос с userId
+            description: "содержит плейсхолдеры вместо userId с паролем"
+            value: {"jsonrpc": "2.0","id": "any id you like","method": "access.authenticate","params": {"userId":000000, "password":"password"}}
+          example2:
+            summary: запрос с логином
+            description: "содержит плейсхолдеры вместо логина с паролем"
+            value: {"jsonrpc": "2.0","id": "any id you like","method": "access.authenticate","params": {"login":"login", "password":"password"}}
+  responses:
+    200:
+      description: "пример ответа"
+      content:
+        application/json:
+          schema:
+            title: "object name"
+            type: object
+            properties:
+              jsonrpc:
+                type: string
+                description: "используемая версия спецификации jsonrpc, в нашем случае - 2.0"
+              id:
+                type: string
+                description: "ид, который возвращается в ответе, часть спецификации"
+              result:
+                type: object
+                description: "барахло"
+                properties:
+                  accessToken:
+                    type: string
+                    description: "Токен доступа, в большинстве случаев нужен именно он"
+                  refreshToken:
+                    type: string
+                    description: "Токен обновления"
+                  expiresAt:
+                    type: integer
+                    description: "Время истечения токена в формате unix-timestamp"

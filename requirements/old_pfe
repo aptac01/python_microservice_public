@@ -1,0 +1,10 @@
+git+ssh://git@github.com/aptac01/service_lib.git@v0.46#egg=service_lib
+Flask==2.1.2
+Werkzeug<2.1
+flask-httpauth==4.2.0
+prometheus-client==0.9.0
+prometheus-flask-exporter==0.14.1
+uWSGI==2.0.19.1
+
+# swagger_ui поставил отсюда: https://github.com/swagger-api/swagger-ui
+# версия актуальная на тот момент, из подпапки dist (т.е. без необходимости ставить npm и вот это всё)
